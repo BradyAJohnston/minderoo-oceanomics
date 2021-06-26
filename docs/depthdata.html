@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Brady Johnston" />
+
+
+<title>Depth Data</title>
+
+<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+<script src="site_libs/echarts4r-4.8.0/echarts-en.min.js"></script>
+<script src="site_libs/echarts4r-4.8.0/ecStat.min.js"></script>
+<script src="site_libs/echarts4r-4.8.0/dataTool.min.js"></script>
+<script src="site_libs/echarts4r-binding-0.4.0/echarts4r.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">minderoo-oceanomics</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Depth Data</h1>
+<h4 class="author">Brady Johnston</h4>
+<h4 class="date">26/06/2021</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-06-26
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>minderoo-oceanomics/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20210626code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20210626)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20210626code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20210626)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong598648a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> 598648a </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrong598648a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 598648a. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  data/4e2c_data_20210625_121022.csv
+    Untracked:  plotting_depth.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/depthdata.Rmd</code>) and HTML (<code>docs/depthdata.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+598648a
+</td>
+<td>
+Brady
+</td>
+<td>
+2021-06-26
+</td>
+<td>
+wflow_publish(“analysis/depthdata.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<div id="read-data" class="section level1">
+<h1>Read Data</h1>
+<pre class="r"><code>df &lt;- read.csv(&quot;data/4e2c_data_20210625_121022.csv&quot;)
+df %&gt;% 
+  rename(time = 1, 
+         temp = 2, 
+         depth = 3) %&gt;% 
+  mutate(
+    time = lubridate::as_datetime(time)
+  ) %&gt;% 
+  filter(!is.na(temp)) -&gt; df</code></pre>
+<pre><code>Warning: 42 failed to parse.</code></pre>
+<pre class="r"><code>df  %&gt;% 
+  head() %&gt;% 
+  kableExtra::kbl() %&gt;% 
+  kableExtra::kable_minimal()</code></pre>
+<table class=" lightable-minimal" style="font-family: &quot;Trebuchet MS&quot;, verdana, sans-serif; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+time
+</th>
+<th style="text-align:right;">
+temp
+</th>
+<th style="text-align:right;">
+depth
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+2021-06-25 12:11:25
+</td>
+<td style="text-align:right;">
+22.205
+</td>
+<td style="text-align:right;">
+0.342
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-06-25 12:12:25
+</td>
+<td style="text-align:right;">
+21.408
+</td>
+<td style="text-align:right;">
+0.200
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-06-25 12:13:25
+</td>
+<td style="text-align:right;">
+21.466
+</td>
+<td style="text-align:right;">
+0.216
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-06-25 12:14:25
+</td>
+<td style="text-align:right;">
+21.173
+</td>
+<td style="text-align:right;">
+0.157
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-06-25 12:15:25
+</td>
+<td style="text-align:right;">
+22.124
+</td>
+<td style="text-align:right;">
+6.167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2021-06-25 12:16:24
+</td>
+<td style="text-align:right;">
+22.129
+</td>
+<td style="text-align:right;">
+5.611
+</td>
+</tr>
+</tbody>
+</table>
+<div id="depth-over-time" class="section level2">
+<h2>Depth Over Time</h2>
+<pre class="r"><code>library(echarts4r)
+chart1 &lt;- df %&gt;% 
+  mutate(depth = -depth) %&gt;% 
+  e_charts(time, elementId = &quot;chart1&quot;, height = 400) %&gt;% 
+  e_line(depth) %&gt;% 
+  e_legend(show = FALSE) %&gt;% 
+  e_tooltip(trigger = &quot;axis&quot;)
+
+# chart1</code></pre>
+</div>
+<div id="temperature-over-time" class="section level2">
+<h2>Temperature Over Time</h2>
+<pre class="r"><code>chart2 &lt;- df %&gt;% 
+  e_charts(time, elementId = &quot;chart2&quot;, height = 400) %&gt;% 
+  e_line(temp) %&gt;% 
+  e_legend(show = FALSE) %&gt;% 
+  e_tooltip(trigger = &quot;axis&quot;) %&gt;% 
+  e_connect(&quot;chart1&quot;)
+
+# chart2</code></pre>
+</div>
+<div id="connected-plots" class="section level2">
+<h2>Connected Plots</h2>
+<pre class="r"><code>e_arrange(
+  chart1,
+  chart2
+)</code></pre>
+<div class="row">
+<div class="col-xs-12">
+<div id="chart1" style="width:100%;height:400px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="chart1">{"x":{"theme":"","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true}],"xAxis":[{"data":["2021-06-25T12:11:25Z","2021-06-25T12:12:25Z","2021-06-25T12:13:25Z","2021-06-25T12:14:25Z","2021-06-25T12:15:25Z","2021-06-25T12:16:24Z","2021-06-25T12:17:24Z","2021-06-25T12:18:24Z","2021-06-25T12:19:24Z","2021-06-25T12:20:24Z","2021-06-25T12:21:24Z","2021-06-25T12:22:24Z","2021-06-25T12:23:24Z","2021-06-25T12:24:24Z","2021-06-25T12:25:24Z","2021-06-25T12:26:24Z","2021-06-25T12:27:24Z","2021-06-25T12:28:24Z","2021-06-25T12:29:24Z","2021-06-25T12:30:24Z","2021-06-25T12:31:24Z","2021-06-25T12:32:24Z","2021-06-25T12:33:24Z","2021-06-25T12:34:24Z","2021-06-25T12:35:24Z","2021-06-25T12:36:24Z","2021-06-25T12:37:24Z","2021-06-25T12:38:24Z","2021-06-25T12:39:24Z","2021-06-25T12:40:24Z","2021-06-25T12:41:24Z","2021-06-25T12:42:24Z","2021-06-25T12:43:24Z","2021-06-25T12:44:24Z","2021-06-25T12:45:24Z","2021-06-25T12:46:24Z","2021-06-25T12:47:24Z","2021-06-25T12:48:24Z","2021-06-25T12:49:24Z","2021-06-25T12:50:24Z","2021-06-25T12:51:24Z","2021-06-25T12:52:24Z","2021-06-25T12:53:23Z","2021-06-25T12:54:23Z","2021-06-25T12:55:23Z","2021-06-25T12:56:23Z","2021-06-25T12:57:23Z","2021-06-25T12:58:23Z","2021-06-25T12:59:23Z","2021-06-25T13:00:23Z","2021-06-25T13:01:23Z","2021-06-25T13:02:23Z","2021-06-25T13:03:23Z","2021-06-25T13:04:23Z","2021-06-25T13:05:23Z","2021-06-25T13:06:23Z","2021-06-25T13:07:23Z","2021-06-25T13:08:23Z","2021-06-25T13:09:23Z","2021-06-25T13:10:23Z","2021-06-25T13:11:23Z","2021-06-25T13:12:23Z","2021-06-25T13:13:23Z","2021-06-25T13:14:23Z","2021-06-25T13:15:23Z","2021-06-25T13:16:23Z","2021-06-25T13:17:23Z","2021-06-25T13:18:23Z","2021-06-25T13:19:23Z","2021-06-25T13:20:23Z","2021-06-25T13:21:23Z","2021-06-25T13:22:23Z","2021-06-25T13:23:23Z","2021-06-25T13:24:23Z","2021-06-25T13:25:23Z","2021-06-25T13:26:23Z","2021-06-25T13:27:23Z","2021-06-25T13:28:23Z","2021-06-25T13:29:23Z","2021-06-25T13:30:23Z","2021-06-25T13:31:23Z","2021-06-25T13:32:23Z","2021-06-25T13:33:23Z","2021-06-25T13:34:23Z","2021-06-25T13:35:23Z","2021-06-25T13:36:23Z","2021-06-25T13:37:23Z","2021-06-25T13:38:23Z","2021-06-25T13:39:23Z","2021-06-25T13:40:23Z","2021-06-25T13:41:23Z","2021-06-25T13:42:23Z","2021-06-25T13:43:23Z","2021-06-25T13:44:22Z","2021-06-25T13:45:22Z","2021-06-25T13:46:22Z","2021-06-25T13:47:22Z","2021-06-25T13:48:22Z","2021-06-25T13:49:22Z","2021-06-25T13:50:22Z","2021-06-25T13:51:22Z","2021-06-25T13:52:22Z","2021-06-25T13:53:22Z","2021-06-25T13:54:22Z","2021-06-25T13:55:21Z"],"type":"time","boundaryGap":true}],"legend":{"data":["depth"],"show":false,"type":"plain"},"series":[{"data":[{"value":["2021-06-25 12:11:25","  -0.342"]},{"value":["2021-06-25 12:12:25","  -0.200"]},{"value":["2021-06-25 12:13:25","  -0.216"]},{"value":["2021-06-25 12:14:25","  -0.157"]},{"value":["2021-06-25 12:15:25","  -6.167"]},{"value":["2021-06-25 12:16:24","  -5.611"]},{"value":["2021-06-25 12:17:24"," -12.345"]},{"value":["2021-06-25 12:18:24"," -17.990"]},{"value":["2021-06-25 12:19:24"," -18.166"]},{"value":["2021-06-25 12:20:24"," -20.128"]},{"value":["2021-06-25 12:21:24"," -24.326"]},{"value":["2021-06-25 12:22:24"," -25.098"]},{"value":["2021-06-25 12:23:24"," -24.162"]},{"value":["2021-06-25 12:24:24"," -35.646"]},{"value":["2021-06-25 12:25:24"," -84.006"]},{"value":["2021-06-25 12:26:24","-127.241"]},{"value":["2021-06-25 12:27:24","-167.230"]},{"value":["2021-06-25 12:28:24","-204.357"]},{"value":["2021-06-25 12:29:24","-237.860"]},{"value":["2021-06-25 12:30:24","-268.001"]},{"value":["2021-06-25 12:31:24","-295.982"]},{"value":["2021-06-25 12:32:24","-322.016"]},{"value":["2021-06-25 12:33:24","-346.052"]},{"value":["2021-06-25 12:34:24","-382.291"]},{"value":["2021-06-25 12:35:24","-417.074"]},{"value":["2021-06-25 12:36:24","-440.948"]},{"value":["2021-06-25 12:37:24","-450.856"]},{"value":["2021-06-25 12:38:24","-464.165"]},{"value":["2021-06-25 12:39:24","-475.514"]},{"value":["2021-06-25 12:40:24","-482.682"]},{"value":["2021-06-25 12:41:24","-468.329"]},{"value":["2021-06-25 12:42:24","-427.069"]},{"value":["2021-06-25 12:43:24","-402.855"]},{"value":["2021-06-25 12:44:24","-389.461"]},{"value":["2021-06-25 12:45:24","-376.194"]},{"value":["2021-06-25 12:46:24","-352.353"]},{"value":["2021-06-25 12:47:24","-330.741"]},{"value":["2021-06-25 12:48:24","-343.080"]},{"value":["2021-06-25 12:49:24","-365.940"]},{"value":["2021-06-25 12:50:24","-378.381"]},{"value":["2021-06-25 12:51:24","-395.923"]},{"value":["2021-06-25 12:52:24","-386.374"]},{"value":["2021-06-25 12:53:23","-376.856"]},{"value":["2021-06-25 12:54:23","-362.778"]},{"value":["2021-06-25 12:55:23","-384.771"]},{"value":["2021-06-25 12:56:23","-409.730"]},{"value":["2021-06-25 12:57:23","-437.132"]},{"value":["2021-06-25 12:58:23","-475.087"]},{"value":["2021-06-25 12:59:23","-506.737"]},{"value":["2021-06-25 13:00:23","-529.900"]},{"value":["2021-06-25 13:01:23","-562.344"]},{"value":["2021-06-25 13:02:23","-585.711"]},{"value":["2021-06-25 13:03:23","-603.539"]},{"value":["2021-06-25 13:04:23","-627.956"]},{"value":["2021-06-25 13:05:23","-635.534"]},{"value":["2021-06-25 13:06:23","-628.463"]},{"value":["2021-06-25 13:07:23","-613.312"]},{"value":["2021-06-25 13:08:23","-607.058"]},{"value":["2021-06-25 13:09:23","-627.790"]},{"value":["2021-06-25 13:10:23","-652.202"]},{"value":["2021-06-25 13:11:23","-674.900"]},{"value":["2021-06-25 13:12:23","-685.421"]},{"value":["2021-06-25 13:13:23","-697.583"]},{"value":["2021-06-25 13:14:23","-693.779"]},{"value":["2021-06-25 13:15:23","-680.719"]},{"value":["2021-06-25 13:16:23","-662.076"]},{"value":["2021-06-25 13:17:23","-663.784"]},{"value":["2021-06-25 13:18:23","-682.189"]},{"value":["2021-06-25 13:19:23","-705.473"]},{"value":["2021-06-25 13:20:23","-730.400"]},{"value":["2021-06-25 13:21:23","-734.476"]},{"value":["2021-06-25 13:22:23","-725.174"]},{"value":["2021-06-25 13:23:23","-735.510"]},{"value":["2021-06-25 13:24:23","-747.648"]},{"value":["2021-06-25 13:25:23","-742.461"]},{"value":["2021-06-25 13:26:23","-726.813"]},{"value":["2021-06-25 13:27:23","-730.918"]},{"value":["2021-06-25 13:28:23","-739.711"]},{"value":["2021-06-25 13:29:23","-704.701"]},{"value":["2021-06-25 13:30:23","-657.295"]},{"value":["2021-06-25 13:31:23","-606.653"]},{"value":["2021-06-25 13:32:23","-553.498"]},{"value":["2021-06-25 13:33:23","-499.844"]},{"value":["2021-06-25 13:34:23","-448.092"]},{"value":["2021-06-25 13:35:23","-398.277"]},{"value":["2021-06-25 13:36:23","-352.365"]},{"value":["2021-06-25 13:37:23","-313.489"]},{"value":["2021-06-25 13:38:23","-279.759"]},{"value":["2021-06-25 13:39:23","-249.940"]},{"value":["2021-06-25 13:40:23","-225.396"]},{"value":["2021-06-25 13:41:23","-205.445"]},{"value":["2021-06-25 13:42:23","-188.311"]},{"value":["2021-06-25 13:43:23","-173.087"]},{"value":["2021-06-25 13:44:22","-159.720"]},{"value":["2021-06-25 13:45:22","-144.856"]},{"value":["2021-06-25 13:46:22","-129.122"]},{"value":["2021-06-25 13:47:22","-111.666"]},{"value":["2021-06-25 13:48:22"," -94.033"]},{"value":["2021-06-25 13:49:22"," -90.772"]},{"value":["2021-06-25 13:50:22"," -56.696"]},{"value":["2021-06-25 13:51:22"," -25.071"]},{"value":["2021-06-25 13:52:22"," -24.532"]},{"value":["2021-06-25 13:53:22"," -17.984"]},{"value":["2021-06-25 13:54:22","  -6.903"]},{"value":["2021-06-25 13:55:21","  -0.241"]}],"yAxisIndex":0,"xAxisIndex":0,"name":"depth","type":"line","coordinateSystem":"cartesian2d"}],"tooltip":{"trigger":"axis"}},"dispose":true},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-12">
+<div id="chart2" style="width:100%;height:400px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="chart2">{"x":{"theme":"","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true}],"xAxis":[{"data":["2021-06-25T12:11:25Z","2021-06-25T12:12:25Z","2021-06-25T12:13:25Z","2021-06-25T12:14:25Z","2021-06-25T12:15:25Z","2021-06-25T12:16:24Z","2021-06-25T12:17:24Z","2021-06-25T12:18:24Z","2021-06-25T12:19:24Z","2021-06-25T12:20:24Z","2021-06-25T12:21:24Z","2021-06-25T12:22:24Z","2021-06-25T12:23:24Z","2021-06-25T12:24:24Z","2021-06-25T12:25:24Z","2021-06-25T12:26:24Z","2021-06-25T12:27:24Z","2021-06-25T12:28:24Z","2021-06-25T12:29:24Z","2021-06-25T12:30:24Z","2021-06-25T12:31:24Z","2021-06-25T12:32:24Z","2021-06-25T12:33:24Z","2021-06-25T12:34:24Z","2021-06-25T12:35:24Z","2021-06-25T12:36:24Z","2021-06-25T12:37:24Z","2021-06-25T12:38:24Z","2021-06-25T12:39:24Z","2021-06-25T12:40:24Z","2021-06-25T12:41:24Z","2021-06-25T12:42:24Z","2021-06-25T12:43:24Z","2021-06-25T12:44:24Z","2021-06-25T12:45:24Z","2021-06-25T12:46:24Z","2021-06-25T12:47:24Z","2021-06-25T12:48:24Z","2021-06-25T12:49:24Z","2021-06-25T12:50:24Z","2021-06-25T12:51:24Z","2021-06-25T12:52:24Z","2021-06-25T12:53:23Z","2021-06-25T12:54:23Z","2021-06-25T12:55:23Z","2021-06-25T12:56:23Z","2021-06-25T12:57:23Z","2021-06-25T12:58:23Z","2021-06-25T12:59:23Z","2021-06-25T13:00:23Z","2021-06-25T13:01:23Z","2021-06-25T13:02:23Z","2021-06-25T13:03:23Z","2021-06-25T13:04:23Z","2021-06-25T13:05:23Z","2021-06-25T13:06:23Z","2021-06-25T13:07:23Z","2021-06-25T13:08:23Z","2021-06-25T13:09:23Z","2021-06-25T13:10:23Z","2021-06-25T13:11:23Z","2021-06-25T13:12:23Z","2021-06-25T13:13:23Z","2021-06-25T13:14:23Z","2021-06-25T13:15:23Z","2021-06-25T13:16:23Z","2021-06-25T13:17:23Z","2021-06-25T13:18:23Z","2021-06-25T13:19:23Z","2021-06-25T13:20:23Z","2021-06-25T13:21:23Z","2021-06-25T13:22:23Z","2021-06-25T13:23:23Z","2021-06-25T13:24:23Z","2021-06-25T13:25:23Z","2021-06-25T13:26:23Z","2021-06-25T13:27:23Z","2021-06-25T13:28:23Z","2021-06-25T13:29:23Z","2021-06-25T13:30:23Z","2021-06-25T13:31:23Z","2021-06-25T13:32:23Z","2021-06-25T13:33:23Z","2021-06-25T13:34:23Z","2021-06-25T13:35:23Z","2021-06-25T13:36:23Z","2021-06-25T13:37:23Z","2021-06-25T13:38:23Z","2021-06-25T13:39:23Z","2021-06-25T13:40:23Z","2021-06-25T13:41:23Z","2021-06-25T13:42:23Z","2021-06-25T13:43:23Z","2021-06-25T13:44:22Z","2021-06-25T13:45:22Z","2021-06-25T13:46:22Z","2021-06-25T13:47:22Z","2021-06-25T13:48:22Z","2021-06-25T13:49:22Z","2021-06-25T13:50:22Z","2021-06-25T13:51:22Z","2021-06-25T13:52:22Z","2021-06-25T13:53:22Z","2021-06-25T13:54:22Z","2021-06-25T13:55:21Z"],"type":"time","boundaryGap":true}],"legend":{"data":["temp"],"show":false,"type":"plain"},"series":[{"data":[{"value":["2021-06-25 12:11:25","22.205"]},{"value":["2021-06-25 12:12:25","21.408"]},{"value":["2021-06-25 12:13:25","21.466"]},{"value":["2021-06-25 12:14:25","21.173"]},{"value":["2021-06-25 12:15:25","22.124"]},{"value":["2021-06-25 12:16:24","22.129"]},{"value":["2021-06-25 12:17:24","21.924"]},{"value":["2021-06-25 12:18:24","21.681"]},{"value":["2021-06-25 12:19:24","21.725"]},{"value":["2021-06-25 12:20:24","21.482"]},{"value":["2021-06-25 12:21:24","21.015"]},{"value":["2021-06-25 12:22:24","20.944"]},{"value":["2021-06-25 12:23:24","21.078"]},{"value":["2021-06-25 12:24:24","20.408"]},{"value":["2021-06-25 12:25:24","20.336"]},{"value":["2021-06-25 12:26:24","19.475"]},{"value":["2021-06-25 12:27:24","18.188"]},{"value":["2021-06-25 12:28:24","16.213"]},{"value":["2021-06-25 12:29:24","13.866"]},{"value":["2021-06-25 12:30:24","12.485"]},{"value":["2021-06-25 12:31:24","11.633"]},{"value":["2021-06-25 12:32:24","10.978"]},{"value":["2021-06-25 12:33:24","10.473"]},{"value":["2021-06-25 12:34:24","10.013"]},{"value":["2021-06-25 12:35:24"," 9.747"]},{"value":["2021-06-25 12:36:24"," 9.571"]},{"value":["2021-06-25 12:37:24"," 9.511"]},{"value":["2021-06-25 12:38:24"," 9.461"]},{"value":["2021-06-25 12:39:24"," 9.405"]},{"value":["2021-06-25 12:40:24"," 9.361"]},{"value":["2021-06-25 12:41:24"," 9.442"]},{"value":["2021-06-25 12:42:24"," 9.685"]},{"value":["2021-06-25 12:43:24"," 9.873"]},{"value":["2021-06-25 12:44:24"," 9.999"]},{"value":["2021-06-25 12:45:24","10.137"]},{"value":["2021-06-25 12:46:24","10.446"]},{"value":["2021-06-25 12:47:24","10.800"]},{"value":["2021-06-25 12:48:24","10.598"]},{"value":["2021-06-25 12:49:24","10.313"]},{"value":["2021-06-25 12:50:24","10.121"]},{"value":["2021-06-25 12:51:24"," 9.915"]},{"value":["2021-06-25 12:52:24","10.026"]},{"value":["2021-06-25 12:53:23","10.115"]},{"value":["2021-06-25 12:54:23","10.299"]},{"value":["2021-06-25 12:55:23","10.019"]},{"value":["2021-06-25 12:56:23"," 9.752"]},{"value":["2021-06-25 12:57:23"," 9.681"]},{"value":["2021-06-25 12:58:23"," 9.413"]},{"value":["2021-06-25 12:59:23"," 9.184"]},{"value":["2021-06-25 13:00:23"," 8.962"]},{"value":["2021-06-25 13:01:23"," 8.522"]},{"value":["2021-06-25 13:02:23"," 8.149"]},{"value":["2021-06-25 13:03:23"," 7.865"]},{"value":["2021-06-25 13:04:23"," 7.460"]},{"value":["2021-06-25 13:05:23"," 7.224"]},{"value":["2021-06-25 13:06:23"," 7.450"]},{"value":["2021-06-25 13:07:23"," 7.733"]},{"value":["2021-06-25 13:08:23"," 7.826"]},{"value":["2021-06-25 13:09:23"," 7.451"]},{"value":["2021-06-25 13:10:23"," 6.602"]},{"value":["2021-06-25 13:11:23"," 6.195"]},{"value":["2021-06-25 13:12:23"," 5.972"]},{"value":["2021-06-25 13:13:23"," 5.792"]},{"value":["2021-06-25 13:14:23"," 5.900"]},{"value":["2021-06-25 13:15:23"," 6.000"]},{"value":["2021-06-25 13:16:23"," 6.466"]},{"value":["2021-06-25 13:17:23"," 6.421"]},{"value":["2021-06-25 13:18:23"," 5.983"]},{"value":["2021-06-25 13:19:23"," 5.536"]},{"value":["2021-06-25 13:20:23"," 4.940"]},{"value":["2021-06-25 13:21:23"," 4.897"]},{"value":["2021-06-25 13:22:23"," 4.999"]},{"value":["2021-06-25 13:23:23"," 4.898"]},{"value":["2021-06-25 13:24:23"," 4.865"]},{"value":["2021-06-25 13:25:23"," 4.877"]},{"value":["2021-06-25 13:26:23"," 4.996"]},{"value":["2021-06-25 13:27:23"," 4.974"]},{"value":["2021-06-25 13:28:23"," 4.879"]},{"value":["2021-06-25 13:29:23"," 5.581"]},{"value":["2021-06-25 13:30:23"," 6.560"]},{"value":["2021-06-25 13:31:23"," 7.880"]},{"value":["2021-06-25 13:32:23"," 8.763"]},{"value":["2021-06-25 13:33:23"," 9.284"]},{"value":["2021-06-25 13:34:23"," 9.598"]},{"value":["2021-06-25 13:35:23","10.027"]},{"value":["2021-06-25 13:36:23","10.686"]},{"value":["2021-06-25 13:37:23","11.376"]},{"value":["2021-06-25 13:38:23","12.514"]},{"value":["2021-06-25 13:39:23","13.616"]},{"value":["2021-06-25 13:40:23","14.455"]},{"value":["2021-06-25 13:41:23","15.831"]},{"value":["2021-06-25 13:42:23","16.936"]},{"value":["2021-06-25 13:43:23","17.645"]},{"value":["2021-06-25 13:44:22","18.862"]},{"value":["2021-06-25 13:45:22","19.140"]},{"value":["2021-06-25 13:46:22","19.666"]},{"value":["2021-06-25 13:47:22","20.269"]},{"value":["2021-06-25 13:48:22","20.335"]},{"value":["2021-06-25 13:49:22","20.336"]},{"value":["2021-06-25 13:50:22","20.357"]},{"value":["2021-06-25 13:51:22","21.211"]},{"value":["2021-06-25 13:52:22","21.402"]},{"value":["2021-06-25 13:53:22","21.774"]},{"value":["2021-06-25 13:54:22","22.175"]},{"value":["2021-06-25 13:55:21","20.298"]}],"yAxisIndex":0,"xAxisIndex":0,"name":"temp","type":"line","coordinateSystem":"cartesian2d"}],"tooltip":{"trigger":"axis"}},"dispose":true,"connect":["chart1"]},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<div id="temperature-vs-depth" class="section level2">
+<h2>Temperature vs Depth</h2>
+<pre class="r"><code>df %&gt;% 
+  e_charts(depth) %&gt;% 
+  e_scatter(temp) %&gt;% 
+  # e_visual_map(time) %&gt;% 
+  e_tooltip(trigger = &quot;axis&quot;) %&gt;% 
+  e_legend(show = FALSE)</code></pre>
+<div id="htmlwidget-d4154b08fdd70b619c71" style="width:100%;height:500px;" class="echarts4r html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d4154b08fdd70b619c71">{"x":{"theme":"","tl":false,"draw":true,"renderer":"canvas","events":[],"buttons":[],"opts":{"yAxis":[{"show":true}],"xAxis":[{"type":"value"}],"legend":{"data":["temp"],"show":false,"type":"plain"},"series":[{"data":[{"value":[0.157,21.173]},{"value":[0.2,21.408]},{"value":[0.216,21.466]},{"value":[0.241,20.298]},{"value":[0.342,22.205]},{"value":[5.611,22.129]},{"value":[6.167,22.124]},{"value":[6.903,22.175]},{"value":[12.345,21.924]},{"value":[17.984,21.774]},{"value":[17.99,21.681]},{"value":[18.166,21.725]},{"value":[20.128,21.482]},{"value":[24.162,21.078]},{"value":[24.326,21.015]},{"value":[24.532,21.402]},{"value":[25.071,21.211]},{"value":[25.098,20.944]},{"value":[35.646,20.408]},{"value":[56.696,20.357]},{"value":[84.006,20.336]},{"value":[90.772,20.336]},{"value":[94.033,20.335]},{"value":[111.666,20.269]},{"value":[127.241,19.475]},{"value":[129.122,19.666]},{"value":[144.856,19.14]},{"value":[159.72,18.862]},{"value":[167.23,18.188]},{"value":[173.087,17.645]},{"value":[188.311,16.936]},{"value":[204.357,16.213]},{"value":[205.445,15.831]},{"value":[225.396,14.455]},{"value":[237.86,13.866]},{"value":[249.94,13.616]},{"value":[268.001,12.485]},{"value":[279.759,12.514]},{"value":[295.982,11.633]},{"value":[313.489,11.376]},{"value":[322.016,10.978]},{"value":[330.741,10.8]},{"value":[343.08,10.598]},{"value":[346.052,10.473]},{"value":[352.353,10.446]},{"value":[352.365,10.686]},{"value":[362.778,10.299]},{"value":[365.94,10.313]},{"value":[376.194,10.137]},{"value":[376.856,10.115]},{"value":[378.381,10.121]},{"value":[382.291,10.013]},{"value":[384.771,10.019]},{"value":[386.374,10.026]},{"value":[389.461,9.999]},{"value":[395.923,9.915]},{"value":[398.277,10.027]},{"value":[402.855,9.873]},{"value":[409.73,9.752]},{"value":[417.074,9.747]},{"value":[427.069,9.685]},{"value":[437.132,9.681]},{"value":[440.948,9.571]},{"value":[448.092,9.598]},{"value":[450.856,9.511]},{"value":[464.165,9.461]},{"value":[468.329,9.442]},{"value":[475.087,9.413]},{"value":[475.514,9.405]},{"value":[482.682,9.361]},{"value":[499.844,9.284]},{"value":[506.737,9.184]},{"value":[529.9,8.962]},{"value":[553.498,8.763]},{"value":[562.344,8.522]},{"value":[585.711,8.149]},{"value":[603.539,7.865]},{"value":[606.653,7.88]},{"value":[607.058,7.826]},{"value":[613.312,7.733]},{"value":[627.79,7.451]},{"value":[627.956,7.46]},{"value":[628.463,7.45]},{"value":[635.534,7.224]},{"value":[652.202,6.602]},{"value":[657.295,6.56]},{"value":[662.076,6.466]},{"value":[663.784,6.421]},{"value":[674.9,6.195]},{"value":[680.719,6]},{"value":[682.189,5.983]},{"value":[685.421,5.972]},{"value":[693.779,5.9]},{"value":[697.583,5.792]},{"value":[704.701,5.581]},{"value":[705.473,5.536]},{"value":[725.174,4.999]},{"value":[726.813,4.996]},{"value":[730.4,4.94]},{"value":[730.918,4.974]},{"value":[734.476,4.897]},{"value":[735.51,4.898]},{"value":[739.711,4.879]},{"value":[742.461,4.877]},{"value":[747.648,4.865]}],"name":"temp","type":"scatter","symbol":null,"coordinateSystem":"cartesian2d","yAxisIndex":0,"xAxisIndex":0,"symbolSize":3}],"tooltip":{"trigger":"axis"}},"dispose":true},"evals":[],"jsHooks":[]}</script>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.1.0 (2021-05-18)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_AU.UTF-8/en_AU.UTF-8/en_AU.UTF-8/C/en_AU.UTF-8/en_AU.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] echarts4r_0.4.0 forcats_0.5.1   stringr_1.4.0   dplyr_1.0.6    
+ [5] purrr_0.3.4     readr_1.4.0     tidyr_1.1.3     tibble_3.1.2   
+ [9] ggplot2_3.3.3   tidyverse_1.3.1 workflowr_1.6.2
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.6        svglite_2.0.0     lubridate_1.7.10  assertthat_0.2.1 
+ [5] rprojroot_2.0.2   digest_0.6.27     utf8_1.2.1        mime_0.10        
+ [9] R6_2.5.0          cellranger_1.1.0  backports_1.2.1   reprex_2.0.0     
+[13] evaluate_0.14     highr_0.9         httr_1.4.2        pillar_1.6.1     
+[17] rlang_0.4.11      readxl_1.3.1      rstudioapi_0.13   whisker_0.4      
+[21] jquerylib_0.1.4   rmarkdown_2.8     webshot_0.5.2     htmlwidgets_1.5.3
+[25] munsell_0.5.0     shiny_1.6.0       broom_0.7.6       compiler_4.1.0   
+[29] httpuv_1.6.1      modelr_0.1.8      xfun_0.23         pkgconfig_2.0.3  
+[33] systemfonts_1.0.2 htmltools_0.5.1.1 tidyselect_1.1.1  viridisLite_0.4.0
+[37] fansi_0.5.0       crayon_1.4.1      dbplyr_2.1.1      withr_2.4.2      
+[41] later_1.2.0       grid_4.1.0        xtable_1.8-4      jsonlite_1.7.2   
+[45] gtable_0.3.0      lifecycle_1.0.0   DBI_1.1.1         git2r_0.28.0     
+[49] magrittr_2.0.1    scales_1.1.1      cli_2.5.0         stringi_1.6.2    
+[53] fs_1.5.0          promises_1.2.0.1  xml2_1.3.2        bslib_0.2.5.1    
+[57] ellipsis_0.3.2    generics_0.1.0    vctrs_0.3.8       kableExtra_1.3.4 
+[61] tools_4.1.0       glue_1.4.2        hms_1.1.0         fastmap_1.1.0    
+[65] yaml_2.2.1        colorspace_2.0-1  rvest_1.0.0       knitr_1.33       
+[69] haven_2.4.1       sass_0.4.0       </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
