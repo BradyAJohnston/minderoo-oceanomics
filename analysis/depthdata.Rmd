@@ -1,0 +1,79 @@
+---
+title: "Depth Data"
+author: "Brady Johnston"
+date: "26/06/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r etup, message=FALSE}
+library(tidyverse)
+```
+
+
+# Read Data
+```{r}
+df <- read.csv("data/4e2c_data_20210625_121022.csv")
+df %>% 
+  rename(time = 1, 
+         temp = 2, 
+         depth = 3) %>% 
+  mutate(
+    time = lubridate::as_datetime(time)
+  ) %>% 
+  filter(!is.na(temp)) -> df
+
+df  %>% 
+  head() %>% 
+  kableExtra::kbl() %>% 
+  kableExtra::kable_minimal()
+```
+
+
+## Depth Over Time
+```{r}
+library(echarts4r)
+chart1 <- df %>% 
+  mutate(depth = -depth) %>% 
+  e_charts(time, elementId = "chart1", height = 400) %>% 
+  e_line(depth) %>% 
+  e_legend(show = FALSE) %>% 
+  e_tooltip(trigger = "axis")
+
+# chart1
+```
+
+## Temperature Over Time
+```{r}
+chart2 <- df %>% 
+  e_charts(time, elementId = "chart2", height = 400) %>% 
+  e_line(temp) %>% 
+  e_legend(show = FALSE) %>% 
+  e_tooltip(trigger = "axis") %>% 
+  e_connect("chart1")
+
+# chart2
+```
+
+## Connected Plots
+```{r}
+e_arrange(
+  chart1,
+  chart2
+)
+```
+
+
+## Temperature vs Depth
+```{r}
+df %>% 
+  e_charts(depth) %>% 
+  e_scatter(temp) %>% 
+  # e_visual_map(time) %>% 
+  e_tooltip(trigger = "axis") %>% 
+  e_legend(show = FALSE)
+```
