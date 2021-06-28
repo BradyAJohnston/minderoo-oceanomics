@@ -43,6 +43,8 @@
 <script src="site_libs/echarts4r-4.8.0/ecStat.min.js"></script>
 <script src="site_libs/echarts4r-4.8.0/dataTool.min.js"></script>
 <script src="site_libs/echarts4r-binding-0.4.0/echarts4r.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -346,7 +348,13 @@ div.tocify {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/bradyajohnston/minderoo-oceanomics">
+    <span class="fas fa-github"></span>
+     
+    Source code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -474,16 +482,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstronga72c52f"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> a72c52f </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcombradyajohnstonminderoooceanomicstree24cf81aab72bbf40d0cf185f48f5b2f2e7520ff0targetblank24cf81aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/bradyajohnston/minderoo-oceanomics/tree/24cf81aab72bbf40d0cf185f48f5b2f2e7520ff0" target="_blank">24cf81a</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstronga72c52f" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcombradyajohnstonminderoooceanomicstree24cf81aab72bbf40d0cf185f48f5b2f2e7520ff0targetblank24cf81aa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version a72c52f. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/bradyajohnston/minderoo-oceanomics/tree/24cf81aab72bbf40d0cf185f48f5b2f2e7520ff0" target="_blank">24cf81a</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -493,13 +501,8 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
 
-Untracked files:
-    Untracked:  data/4e2c_data_20210625_121022.csv
-    Untracked:  plotting_depth.R
-
 Unstaged changes:
     Modified:   analysis/depthdata.Rmd
-    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -540,10 +543,44 @@ Message
 <tbody>
 <tr>
 <td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/bradyajohnston/minderoo-oceanomics/blob/24cf81aab72bbf40d0cf185f48f5b2f2e7520ff0/analysis/depthdata.Rmd" target="_blank">24cf81a</a>
+</td>
+<td>
+Brady
+</td>
+<td>
+2021-06-28
+</td>
+<td>
+first push
+</td>
+</tr>
+<tr>
+<td>
 html
 </td>
 <td>
-a72c52f
+<a href="https://rawcdn.githack.com/bradyajohnston/minderoo-oceanomics/24cf81aab72bbf40d0cf185f48f5b2f2e7520ff0/docs/depthdata.html" target="_blank">24cf81a</a>
+</td>
+<td>
+Brady
+</td>
+<td>
+2021-06-28
+</td>
+<td>
+first push
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/bradyajohnston/minderoo-oceanomics/a72c52fbfcae1e411d5785eb3706ed95ffaa8674/docs/depthdata.html" target="_blank">a72c52f</a>
 </td>
 <td>
 Brady
@@ -560,7 +597,7 @@ Build site.
 html
 </td>
 <td>
-75a142f
+<a href="https://rawcdn.githack.com/bradyajohnston/minderoo-oceanomics/75a142f8c146150d08eb13d9315a4b49d91808a9/docs/depthdata.html" target="_blank">75a142f</a>
 </td>
 <td>
 Brady
@@ -577,7 +614,7 @@ Build site.
 Rmd
 </td>
 <td>
-598648a
+<a href="https://github.com/bradyajohnston/minderoo-oceanomics/blob/598648a240a2fd6eb33be94a968d117832fd9dcc/analysis/depthdata.Rmd" target="_blank">598648a</a>
 </td>
 <td>
 Brady
@@ -815,17 +852,64 @@ df %&gt;%
       line_in
     ), 
     line_out = line_in * 45 - 1000, 
-    depth = -depth
+    depth = -depth, 
+    rate = depth - lag(depth), 
+    # rate = rate / 45, 
+    
+    diff = depth - line_out
   ) %&gt;% 
-  ggplot(aes(line_out, depth)) + 
-  geom_line() + 
+  ggplot(
+    aes(diff, depth)
+    ) + 
+  # geom_path() +
   geom_point() + 
   coord_cartesian(ylim = c(-1000,0), 
-                  xlim = c(-1000, 0)) + 
-  theme(aspect.ratio = 1)</code></pre>
-<pre><code>Warning: Removed 78 row(s) containing missing values (geom_path).</code></pre>
+                  xlim = c(0,1000)) + 
+  geom_hline(yintercept = -1000) + 
+  geom_vline(xintercept = 0) + 
+  theme(aspect.ratio = 1) + 
+  labs(
+    title = &quot;Potential Shape of Line&quot;
+  )</code></pre>
 <pre><code>Warning: Removed 78 rows containing missing values (geom_point).</code></pre>
 <p><img src="figure/depthdata.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/bradyajohnston/minderoo-oceanomics/blob/24cf81aab72bbf40d0cf185f48f5b2f2e7520ff0/docs/figure/depthdata.Rmd/unnamed-chunk-7-1.png" target="_blank">24cf81a</a>
+</td>
+<td>
+Brady
+</td>
+<td>
+2021-06-28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
