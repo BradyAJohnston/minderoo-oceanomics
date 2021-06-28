@@ -1,8 +1,10 @@
 ---
-title: "Depth Data"
+title: "Deep Drop Data"
 author: "Brady Johnston"
 date: "26/06/2021"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +17,9 @@ library(tidyverse)
 ```
 
 
-# Read Data
+# Deep Drop Data
+
+### Checking the csv
 ```{r}
 df <- read.csv("data/4e2c_data_20210625_121022.csv")
 df %>% 
@@ -25,7 +29,14 @@ df %>%
   mutate(
     time = lubridate::as_datetime(time)
   ) %>% 
-  filter(!is.na(temp)) -> df
+  filter(!is.na(temp)) %>% 
+  mutate(
+    direction = case_when(
+      time >= lubridate::as_datetime("2021-06-25 13:28:23") ~ "up", 
+      time < lubridate::as_datetime("2021-06-25 13:28:23") ~ "down"
+    )
+  ) %>% 
+  group_by(direction) -> df
 
 df  %>% 
   head() %>% 
@@ -35,6 +46,7 @@ df  %>%
 
 
 ## Depth Over Time
+
 ```{r}
 library(echarts4r)
 chart1 <- df %>% 
@@ -42,7 +54,9 @@ chart1 <- df %>%
   e_charts(time, elementId = "chart1", height = 400) %>% 
   e_line(depth) %>% 
   e_legend(show = FALSE) %>% 
-  e_tooltip(trigger = "axis")
+  e_tooltip(trigger = "axis") %>% 
+  e_title("Sesnor Depth Over Time") %>% 
+  e_axis_labels(x = "Time", y = "Depth (m)")
 
 # chart1
 ```
@@ -54,7 +68,9 @@ chart2 <- df %>%
   e_line(temp) %>% 
   e_legend(show = FALSE) %>% 
   e_tooltip(trigger = "axis") %>% 
-  e_connect("chart1")
+  e_connect("chart1") %>% 
+  e_title("Sensor Temperature Over Time") %>% 
+  e_axis_labels(x = "Time", y = "Temperature (ºC)")
 
 # chart2
 ```
@@ -71,9 +87,63 @@ e_arrange(
 ## Temperature vs Depth
 ```{r}
 df %>% 
+  
   e_charts(depth) %>% 
-  e_scatter(temp) %>% 
-  # e_visual_map(time) %>% 
+  # e_scatter(temp,) %>% 
+  e_line(temp) %>% 
   e_tooltip(trigger = "axis") %>% 
-  e_legend(show = FALSE)
+  e_legend(show = TRUE) %>% 
+  e_title("Temperature At Depth") %>% 
+  e_axis_labels(x = "Depth (m)", y = "Temperature (ºc)")
 ```
+
+# Estimating Line Shape
+
+While the descent had some time points where there was a pause, the ascent stage
+was consistent until the first nisken was recovered at ~ 50 m depth.
+
+The winch operated at ~ 100 m / 2 minutes, or a speed of 50 m / min.
+
+Just the ascent stage shows two distinct ascent  _pre_ and _post_ 13:40, or above and below ~250 m.
+
+```{r}
+df %>% 
+  filter(
+    direction == "up"
+  ) %>% 
+  mutate(depth = -depth) %>% 
+  e_charts(time) %>% 
+  e_line(depth)
+```
+
+
+During ascent, the winch was stopped for the top nisken bottle at a ~ 25 metres 
+as 5 of them were spaced 5 metres apart.
+
+The winch then pulled ~975 m of line in ~ 22 minutes, at a rate of ~ 44 m / minute.
+
+
+```{r}
+# lubridate::time_length(df$time[78] - df$time[79], unit = "minutes")
+
+df %>% 
+  mutate(
+    line_in = lubridate::time_length(time - df$time[79], unit = "minutes"), 
+    line_in = ifelse(
+      line_in < 0, 
+      NA, 
+      line_in
+    ), 
+    line_out = line_in * 45 - 1000, 
+    depth = -depth
+  ) %>% 
+  ggplot(aes(line_out, depth)) + 
+  geom_line() + 
+  geom_point() + 
+  coord_cartesian(ylim = c(-1000,0), 
+                  xlim = c(-1000, 0)) + 
+  theme(aspect.ratio = 1)
+  
+```
+
+
